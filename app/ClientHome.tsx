@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import React, { useRef } from "react";
 import Image from "next/image";
+import Particles from "../components/Particles";
 
 type NovelData = {
     slug: string;
@@ -22,81 +23,114 @@ export default function ClientHome({ featuredNovels }: { featuredNovels: NovelDa
         offset: ["start start", "end start"]
     });
 
-    // Parallax effects
-    const yText = useTransform(scrollYProgress, [0, 1], [0, 200]);
-    const opacityText = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+    // Highly exaggerated Parallax effects
+    const yText = useTransform(scrollYProgress, [0, 1], [0, 600]);
+    const scaleText = useTransform(scrollYProgress, [0, 1], [1, 2]);
+    const opacityText = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+    const bgScale = useTransform(scrollYProgress, [0, 1], [1.02, 1.5]);
+    const rotateSpeed = useTransform(scrollYProgress, [0, 1], [0, 15]);
 
     return (
         <div ref={containerRef} className="relative min-h-screen bg-transparent overflow-hidden">
-
+            <Particles />
             {/* Immersive Cinematic Background */}
-            <div className="absolute inset-0 z-[-1] min-h-screen">
+            <motion.div style={{ scale: bgScale, rotate: rotateSpeed }} className="fixed inset-0 z-[-1] min-h-screen origin-center transition-all duration-100">
                 <Image
                     src="/hero_bg.png"
                     alt="Cinematic Devapuram Background"
                     fill
                     priority
-                    className="object-cover object-center scale-[1.02] transform transition-transform duration-[20s] ease-linear hover:scale-[1.05]"
+                    className="object-cover object-center"
                     sizes="100vw"
+                />
+                <motion.div
+                    animate={{ opacity: [0.3, 0.7, 0.3] }}
+                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-0 bg-[#8b3a3a] mix-blend-overlay"
                 />
                 {/* Dark/Light Gradient Overlay for Text Readability */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#eeece6] via-[#eeece6]/40 to-black/30 dark:from-[#0a0a0a] dark:via-[#0a0a0a]/50 dark:to-black/60 opacity-60 dark:opacity-90"></div>
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#eeece6] dark:to-[#0a0a0a]"></div>
-            </div>
+            </motion.div>
 
             {/* Hero Section */}
-            <section className="relative z-10 px-6 md:px-12 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[90vh]">
+            <section className="relative z-10 px-6 md:px-12 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[90vh] overflow-hidden">
                 <motion.div
-                    style={{ y: yText, opacity: opacityText }}
+                    style={{ y: yText, scale: scaleText, opacity: opacityText }}
                     className="text-center z-10 pointer-events-auto"
                 >
                     <motion.h1
-                        initial={{ opacity: 0, scale: 0.95, y: 50 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                        initial={{ opacity: 0, scale: 0.5, y: 100, rotateX: 90 }}
+                        animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0 }}
+                        transition={{ duration: 1.5, type: "spring", bounce: 0.5 }}
                         className="text-6xl md:text-9xl font-serif text-white tracking-tight mb-6 drop-shadow-2xl"
                     >
-                        Stories that <br /><span className="italic text-[#ff6b6b] drop-shadow-[0_0_15px_rgba(255,107,107,0.5)]">move</span> you.
+                        Stories that <br />
+                        <motion.span
+                            animate={{ scale: [1, 1.1, 1], color: ["#ff6b6b", "#8b3a3a", "#ff6b6b"] }}
+                            transition={{ duration: 3, repeat: Infinity }}
+                            className="inline-block italic drop-shadow-[0_0_25px_rgba(255,107,107,0.8)]"
+                        >
+                            move
+                        </motion.span> you.
                     </motion.h1>
                     <motion.p
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+                        initial={{ opacity: 0, x: -100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 1, delay: 0.5, type: "spring" }}
                         className="max-w-2xl mx-auto text-lg md:text-2xl text-zinc-100 font-sans font-light mb-12 leading-relaxed drop-shadow-lg"
                     >
                         Welcome to the expanding universe of Aravind A.
                     </motion.p>
 
                     <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 1, delay: 0.6 }}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1, delay: 0.8, type: "spring" }}
+                        whileHover={{ scale: 1.15, rotate: 2 }}
+                        whileTap={{ scale: 0.85, rotate: -2 }}
                         className="inline-block relative group"
                     >
-                        <div className="absolute -inset-1 bg-gradient-to-r from-[#ff6b6b] to-[#8b3a3a] rounded-full blur opacity-50 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                        <motion.div
+                            animate={{ rotate: 360, scale: [1, 1.2, 1] }}
+                            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                            className="absolute -inset-4 bg-gradient-to-r from-[#ff6b6b] via-[#8b3a3a] to-[#bf5b5b] rounded-full blur-xl opacity-70 group-hover:opacity-100 transition duration-500"
+                        ></motion.div>
                         <Link
                             href="/novels/sacred-nexus"
-                            className="relative bg-black text-white px-10 py-5 rounded-full font-bold tracking-widest text-sm uppercase shadow-2xl transition-all duration-300 flex items-center gap-3"
+                            className="relative bg-black text-white px-10 py-5 rounded-full font-bold tracking-widest text-sm uppercase shadow-2xl transition-all duration-300 flex items-center gap-3 border border-white/20"
                         >
-                            Start Reading <span aria-hidden="true" className="text-xl">&rarr;</span>
+                            Start Reading
+                            <motion.span
+                                animate={{ x: [0, 10, 0] }}
+                                transition={{ repeat: Infinity, duration: 1 }}
+                                aria-hidden="true"
+                                className="text-xl"
+                            >
+                                &rarr;
+                            </motion.span>
                         </Link>
                     </motion.div>
                 </motion.div>
 
-                {/* Scroll Indicator */}
+                {/* Crazy Scroll Indicator */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1.5, duration: 1 }}
-                    className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white/70 flex flex-col items-center gap-2 pointer-events-none drop-shadow-md"
+                    className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white flex flex-col items-center gap-4 pointer-events-none drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]"
                 >
-                    <span className="text-xs uppercase tracking-[0.3em] font-sans">Scroll</span>
+                    <motion.span
+                        animate={{ opacity: [0.2, 1, 0.2], scale: [0.9, 1.1, 0.9] }}
+                        transition={{ repeat: Infinity, duration: 2 }}
+                        className="text-sm uppercase tracking-[0.5em] font-sans font-bold text-[#ff6b6b]"
+                    >
+                        Plunge In
+                    </motion.span>
                     <motion.div
-                        animate={{ y: [0, 10, 0] }}
-                        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                        className="w-[1px] h-12 bg-gradient-to-b from-white to-transparent"
+                        animate={{ y: [0, 40, 0], scaleY: [1, 3, 1], opacity: [0.5, 1, 0.5] }}
+                        transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                        className="w-[2px] h-16 bg-gradient-to-b from-[#ff6b6b] via-white to-transparent shadow-[0_0_20px_white]"
                     />
                 </motion.div>
             </section>

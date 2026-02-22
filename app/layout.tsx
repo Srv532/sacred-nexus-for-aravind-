@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import { ThemeProvider } from "../components/ThemeProvider";
 import SmoothScroller from "../components/SmoothScroller";
 import EasterEggs from "../components/EasterEggs";
+import Particles from "../components/Particles";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -36,7 +37,9 @@ export default function RootLayout({
         <SmoothScroller />
         <EasterEggs />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="absolute inset-0 pointer-events-none z-[-2] bg-[radial-gradient(#e0ddd5_1px,transparent_1px)] dark:bg-[radial-gradient(#222_1px,transparent_1px)] [background-size:24px_24px] opacity-60"></div>
+          <div className="fixed inset-0 pointer-events-none z-[-2] bg-[radial-gradient(#e0ddd5_1px,transparent_1px)] dark:bg-[radial-gradient(#222_1px,transparent_1px)] [background-size:24px_24px] opacity-60">
+            <Particles />
+          </div>
           <Navigation />
           <main className="min-h-screen pt-[72px]">
             {children}
